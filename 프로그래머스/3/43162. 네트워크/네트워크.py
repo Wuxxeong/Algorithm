@@ -16,6 +16,5 @@ def solution(n, computers):
                 if computers[row][col] == 1  and not visited[col]:
                     queue.append(col)
                     visited[col] = True
-    
     return graph
 
