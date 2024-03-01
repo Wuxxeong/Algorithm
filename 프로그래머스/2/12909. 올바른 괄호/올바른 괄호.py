@@ -1,6 +1,5 @@
 def solution(string):
     answer = True
-    
     tmp = []
     for s in string:
         if s == '(':
