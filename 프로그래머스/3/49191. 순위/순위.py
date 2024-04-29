@@ -10,25 +10,22 @@ def solution(n, results):
         win[a].append(b)
         lose[b].append(a)
         
+        
+    def bfs(i, graph):
+        visited = set()
+        queue = deque()
+        queue.append(i)
+        while queue:
+            current = queue.popleft()
+            for player in graph[current]:
+                if player not in visited:
+                    visited.add(player)
+                    queue.append(player)
+        return visited
+        
     for i in range(1, n+1):
-        wins , loses = [], []
-        wq, lq = deque(), deque()
-        wq.append(i)
-        lq.append(i)
-        
-        while wq:
-            wp = wq.popleft()
-            for p in win[wp]:
-                if p not in wins:
-                    wins.append(p)
-                    wq.append(p)
-        
-        while lq:
-            lp = lq.popleft()
-            for p in lose[lp]:
-                if p not in loses:
-                    loses.append(p)
-                    lq.append(p)
+        wins = bfs(i, win)
+        loses = bfs(i, lose)
                     
         if len(wins)+len(loses)+1 == n: 
             answer+=1
