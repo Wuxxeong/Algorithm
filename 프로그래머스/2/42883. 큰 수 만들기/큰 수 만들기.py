@@ -12,5 +12,4 @@ def solution(number, k):
         
     if k > 0:
         stack = stack[:-k]
-        
     return ''.join(stack)
