@@ -1,6 +1,15 @@
 import math
-from itertools import combinations
+# from itertools import combinations
 
+def combinations(n, new_arr, c):
+    result = []
+
+    if len(new_arr) == n:
+        return [new_arr]
+    for i in range(c, len(chicken)):
+        result += combinations(n, new_arr + [chicken[i]], i+1)
+
+    return result
 
 def calculateDistance(house, chicken):
     min_d = 0
@@ -29,7 +38,7 @@ for i in range(1, N + 1):
             chicken.append([i, j])
 
 distance = float(math.inf)
-for ch in list(combinations(chicken, M)):
+for ch in combinations(M, [], 0):
     cd = calculateDistance(house, ch)
     if cd < distance:
         distance = cd
