@@ -1,14 +1,20 @@
 from collections import deque
 def solution(priorities, location):
-    queue = deque([(i, p) for i, p in enumerate(priorities)])
-    result = []
+    result = [] #result[location]에 있는 수 -> priorities에서 index+1
+    pq = deque()
+    for idx,priority in enumerate(priorities):
+        pq.append((idx,priority))
     
-    while queue:
-        current = queue.popleft()
-        if any(current[1] < q[1] for q in queue):
-            queue.append(current)
+    priorities.sort(reverse=True)
+    mx_i=0
+    while pq:
+        #find max index
+        ci,cp=pq.popleft()
+        if cp==priorities[mx_i]:
+            result.append(ci)
+            mx_i+=1
         else:
-            result.append(current[0])
-    
-    return result.index(location) + 1
-
+            pq.append((ci,cp))
+        if mx_i==len(priorities):break
+    #priorities[location]이 몇번째로 실행되는지
+    return result.index(location)+1
