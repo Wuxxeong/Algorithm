@@ -1,20 +1,21 @@
-from itertools import permutations
+import itertools
+def check(number):
+    if number<=1:
+        return False
+    for i in range(2,number):
+        if number%i==0:
+            return False
+    return True
 
 def solution(numbers):
     answer = 0
-    n = [number for number in numbers]
-    per = []
-    for i in range(1, len(numbers)+1):
-        per += list(permutations(n, i))
-    new_nums = list(set([int(("").join(p)) for p in per]))
+    number = [n for n in numbers]
+    tmp = set()
+    for i in range(1,len(numbers)+1):
+        candidates = list(itertools.permutations(number,i))
+        for cand in candidates:
+            num = int("".join(cand))
+            if check(num):
+                tmp.add(num)
     
-    def isPrime(k):
-        if k == 0 or k == 1: return 0
-        for i in range(2, k):
-            if k%i == 0:
-                return 0
-        return 1
-    
-    for k in new_nums:
-        answer += isPrime(k)
-    return answer
+    return len(tmp)
