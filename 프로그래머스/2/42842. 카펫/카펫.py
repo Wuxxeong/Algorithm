@@ -1,14 +1,16 @@
+import math
 def solution(brown, yellow):
     answer = []
-    area = brown+yellow
+    n = brown+yellow
     
-    subs = []
-    for k in range(1, round(area**0.5)+1):
-        if area%k == 0:
-            subs.append([area//k, k])
-            
-    for sub in subs:
-        if (sub[0]+sub[1])*2 - 4 == brown:
-            answer = sub
+    candidate = []
+    for i in range(2, int(n**0.5)+1):
+        if n%i==0:
+            candidate.append([n//i,i])
+    
+    for row,col in candidate:
+        new_brown = (row+col)*2-4
+        if brown==new_brown:
+            answer=[row,col]
             break
     return answer
