@@ -2,17 +2,17 @@ from collections import deque
 
 def solution(numbers, target):
     answer = 0 
-    queue = deque()
-    n = len(numbers)
-    queue.append([numbers[0],0])
-    queue.append([-1*numbers[0],0])
-    while queue:
-        temp, idx = queue.popleft()
-        idx += 1
-        if idx < n:
-            queue.append([temp+numbers[idx], idx])            
-            queue.append([temp-numbers[idx], idx])
+    q = deque()
+    q.append([numbers[0], 0])
+    q.append([-numbers[0],0])
+    n=len(numbers)
+    while q:
+        num,idx = q.popleft()
+        idx+=1
+        if idx<n:
+            q.append([num+numbers[idx],idx])
+            q.append([num-numbers[idx],idx])
         else:
-            if temp == target:
-                answer += 1
+            if num==target:
+                answer+=1
     return answer
