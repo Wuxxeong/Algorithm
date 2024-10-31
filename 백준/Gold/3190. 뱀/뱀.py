@@ -1,46 +1,52 @@
 from collections import deque
 
-N = int(input())
-K = int(input())
-
-board = [[0]*(N+1) for _ in range(N+1)]
-apples = []
-for _ in range(K):
-    i, j = list(map(int, input().split()))
-    board[i][j] = 1
-    apples.append([i,j])
-
+N = int(input()) #보드의 크기
+board = [[-1]*(N+2)]+[[-1]+[0]*N+[-1]for _ in range(N)]+[[-1]*(N+2)]
+K = int(input()) #사과의 수
+apples = [list(map(int, input().split())) for _ in range(K)]
+for apple in apples:
+    row,col = apple
+    board[row][col]=100
 L = int(input())
-move = []
-for _ in range(L):
-    t, w = input().split()
-    move.append([int(t), w])
+d = [input().split() for _ in range(L)]
 
-snake = deque()
-snake.append([1,1])
 
-T = 0
-dx, dy = [0,1,0,-1], [1,0,-1,0] #오른쪽 90은 index+1 왼쪽 90은 index-1
+di,dj=[0,1,0,-1],[1,0,-1,0]
+
+moved = deque()
+moved.append((1,1))
 i = 0
-while snake:
-    nxt_head = [snake[-1][0]+dx[i], snake[-1][1]+dy[i]]
-    if nxt_head[0]<1 or nxt_head[0]>N or nxt_head[1]<1 or nxt_head[1]>N or nxt_head in snake: #벽 or 자신
-        T += 1
-        break
+ei,ej=moved[0]
+board[ei][ej]=1
 
-    snake.append(nxt_head)
+time=1
+while True:
+    ni,nj = moved[-1][0]+di[i],moved[-1][1]+dj[i]
+    # 1.머리를 다음 칸으로
+    moved.append((ni,nj))
+    # 2.벽이거나 자기사신과 부딪히면 종료
+    if board[ni][nj]==-1 or board[ni][nj]==1:
+        break
+    # 3-1.사과가 존재하지 않으면 꼬리 비움
+    if board[ni][nj]==0:
+        ei,ej=moved.popleft()
+        board[ni][nj]=1
+        board[ei][ej]=0
+    # 3-2.사과가 존재하면 꼬리움직이지 않음
+    elif board[ni][nj]==100:
+        board[ni][nj]=1
+        
+    #방향전환
+    if d!=[]:
+        time_change,direction = d[0]
+        time_change=int(time_change)
+        if time==time_change:
+            if direction=='L':
+                i = (i-1)%4
+            elif direction=='D':
+                i = (i+1)%4
+            d.pop(0)
     
-    if board[nxt_head[0]][nxt_head[1]] == 1:
-        board[nxt_head[0]][nxt_head[1]] = 0
-    else:
-        snake.popleft()
-    
-    T += 1
-    
-    for d in move:
-        if T == d[0] and 'D' == d[1]:
-            i = (i+1)%4
-        elif T == d[0] and 'L' == d[1]:
-            i = (i-1)%4
-            
-print(T)
+    time+=1
+
+print(time)
