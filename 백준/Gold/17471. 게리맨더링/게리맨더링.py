@@ -1,51 +1,56 @@
 from itertools import combinations
 from collections import deque
-
-# bfs 함수에서 두 구역이 연결되어 있는지 확인하고, 인구 차이를 반환합니다.
-def bfs(lst, nums, G):
-    isConnected = [False, False]  # 각 구역이 연결되어 있는지 확인
-    people = [0, 0]               # 각 구역의 인구수를 저장
-
+#[3] bfs에서 return 값 = 인구수 차이 (나눌수 없다면 -1)
+def bfs(lst,nums,G): #s1구역, s2구역, 인구수
+    answer = -1
+    isConnected = [0, 0]
+    people = [0, 0]
     for i in range(len(lst)):
         t = lst[i]
         cur = t[0]
-        q = deque([cur])
-        v = set([cur])
+        q = deque()
+        q.append(cur)
+        v = set()
+        v.add(cur)
 
         while q:
             r = q.popleft()
             for c in t:
-                if c not in v and G[r][c] == 1 and c in t:
+                if G[r][c]==1 and c in t and c not in v:
                     q.append(c)
                     v.add(c)
 
-        if len(v) == len(t):  # 모든 노드가 연결되어 있으면
-            isConnected[i] = True
-            people[i] = sum(nums[k] for k in t)  # 인구수를 합산
+            if len(v)==len(t):
+                isConnected[i] = 1
+                people[i] = sum([nums[k] for k in t])
 
-    # 두 구역이 모두 연결된 경우 인구 차이를 반환하고, 아니면 -1 반환
-    return abs(people[0] - people[1]) if all(isConnected) else -1
+    if sum(isConnected)==2:
+        answer = abs(people[0]-people[1])
 
-# 입력을 받아 초기화
+    return answer
+
 N = int(input())
-nums = [0] + list(map(int, input().split()))  # 인구수
-G = [[0] * (N + 1) for _ in range(N + 1)]
-for i in range(1, N + 1):
+nums = [0]+list(map(int, input().split())) #인구수
+G = [[0]*(N+1) for _ in range(N+1)]
+for i in range(1,N+1):
     lst = list(map(int, input().split()))
     n, connect = lst[0], lst[1:]
-    for j in connect:
-        G[i][j] = G[j][i] = 1  # 무방향 그래프
+    for j in range(n):
+        G[i][connect[j]] = 1
+        G[connect[j]][i] = 1
 
 diff = float('inf')
-all_districts = list(range(1, N + 1))
+all = list(range(1, N+1))
+#[1] n/2개에 대해 combination 뽑기
+for i in range(1,N//2+1):
+    s1_lst = list(combinations(range(1, N + 1), i))
+    for s1 in s1_lst:
+        remain = tuple([num for num in all if num not in s1])
+        cnt = bfs([s1,remain],nums,G)
+        if cnt==-1: continue
+        diff = min(diff, cnt)
 
-# 가능한 모든 조합을 통해 구역을 나누어 최소 인구수 차이를 계산
-for i in range(1, N // 2 + 1):
-    for s1 in combinations(all_districts, i):
-        s2 = tuple(set(all_districts) - set(s1))
-        result = bfs([s1, s2], nums, G)
-        if result != -1:
-            diff = min(diff, result)
+if diff==float('inf'):
+    diff = -1
 
-# 결과 출력
-print(diff if diff != float('inf') else -1)
+print(diff)
