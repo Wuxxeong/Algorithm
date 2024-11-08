@@ -9,6 +9,5 @@ def solution(elements):
         for si in range(L):
             s.add(sum(elements[si:si+i]))
         elements.append(elements[i-1])
-        # print(s)
     
     return len(s)
