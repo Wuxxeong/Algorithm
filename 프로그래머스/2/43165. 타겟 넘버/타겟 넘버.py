@@ -1,18 +1,18 @@
 from collections import deque
 
 def solution(numbers, target):
-    answer = 0 
+    answer = 0
+    
     q = deque()
-    q.append([numbers[0], 0])
-    q.append([-numbers[0],0])
-    n=len(numbers)
+    q.append((0,0))
+    
     while q:
-        num,idx = q.popleft()
-        idx+=1
-        if idx<n:
-            q.append([num+numbers[idx],idx])
-            q.append([num-numbers[idx],idx])
-        else:
-            if num==target:
+        v,i = q.popleft()
+        if i==len(numbers):
+            if v == target:
                 answer+=1
+        else:
+            q.append((v+numbers[i],i+1))
+            q.append((v-numbers[i],i+1))
+        
     return answer
