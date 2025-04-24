@@ -2,20 +2,21 @@ from collections import defaultdict
 
 def solution(genres, plays):
     answer = []
-    gp = defaultdict(list)
-    total = defaultdict(int)
+    dict = defaultdict(list)
+    L = len(genres)
     
-    for i in range(len(genres)):
-        gp[genres[i]].append([plays[i],i])
-        total[genres[i]] += plays[i]
+    for idx in range(L):
+        dict[genres[idx]].append([plays[idx],idx])
         
-    for key in gp.keys():
-        gp[key].sort(reverse=True, key=lambda x:x[0])
+    for key in dict:
+        dict[key].sort(key=lambda x:(-x[0],x[1]))  #고유번호 낮은 순
     
-    genre_order = sorted(total.keys(), key=lambda x: total[x], reverse=True)
+    #속한 노래가 많이 재생된 순
+    genres_key = list(dict.keys())
+    genres_key.sort(key=lambda x:-sum(play for play,_ in dict[x]))
     
-    for genre in genre_order:
-        answer.append(gp[genre][0][1])
-        if len(gp[genre]) > 1:
-            answer.append(gp[genre][1][1])
+    for gk in genres_key:
+        dict_sub = dict[gk][:2]
+        for play,idx in dict_sub:
+            answer.append(idx)
     return answer
