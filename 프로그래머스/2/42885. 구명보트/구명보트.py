@@ -1,16 +1,15 @@
 def solution(people, limit):
     answer = 0
-    people.sort()
-    result = []
+    people.sort(reverse=True)
     
-    i,j=0,len(people)-1
+    left, right = 0, len(people)-1
     
-    while i<=j:
-        if (people[i]+people[j])<=limit:
-            result.append(people[i]+people[j])
-            i+=1
-            j-=1
+    while left<=right:
+        if people[left]+people[right]<=limit:
+            left+=1
+            right-=1
+            answer+=1
         else:
-            result.append(people[j])
-            j-=1
-    return len(result)
+            left+=1
+            answer+=1
+    return answer
