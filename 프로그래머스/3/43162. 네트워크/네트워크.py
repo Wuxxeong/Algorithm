@@ -1,21 +1,17 @@
 from collections import deque
-
 def solution(n, computers):
     answer = 0
-    v = []
-    for i in range(n): #i와 연결되어 있는 것들
-        if i in v: continue
-        
-        v.append(i)
+    vset = set()
+    for i in range(len(computers)): #i번째 컴퓨터를 기준으로
+        if i in vset: continue
         q = deque()
         q.append(i)
         while q:
-            cur = q.popleft()
-            computer = computers[cur]
-            for idx in range(n):
-                if computer[idx]==1 and idx not in v:
-                    q.append(idx)
-                    v.append(idx)
-        answer += 1
-        
+            target = q.popleft()
+            for j in range(i+1,len(computers)): #j 행에서 target이랑 연결된 것 찾기
+                if computers[j][target]==1 and j not in vset:
+                    q.append(j)
+                    vset.add(j)
+        answer+=1
+                
     return answer
