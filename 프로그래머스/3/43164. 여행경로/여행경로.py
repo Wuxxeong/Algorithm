@@ -1,24 +1,25 @@
-from collections import defaultdict
-def solution(tickets):
-    answer = []
-    graph = defaultdict(list)
-    
-    for start, end in tickets:
-        graph[start].append(end)
-        
-    for key in graph:
-        graph[key].sort(reverse=True)  # 알파벳 역순으로 정렬
-    
-    stack = ["ICN"]
-    while stack:
-        now = stack[-1]
-        
-        if now not in graph or not graph[now]:
-            # 현재 노드가 더 이상 갈 수 있는 곳이 없으면 경로에 추가
-            answer.append(stack.pop())
-        else:
-            # 갈 수 있는 곳이 있으면 다음 노드로 이동
-            stack.append(graph[now].pop())
+from collections import deque
 
-    # 경로가 스택에 역순으로 저장되었으므로 뒤집어서 반환
-    return answer[::-1]
+def solution(tickets):
+    tickets.sort()  # 사전순 우선
+    n = len(tickets)
+    answer = []
+
+    # 큐에는 (현재 공항, 사용된 티켓 집합, 경로) 저장
+    q = deque()
+    q.append(("ICN", [False]*n, ["ICN"]))
+
+    while q:
+        cur, used, path = q.popleft()
+
+        # 모든 티켓 사용 완료
+        if len(path) == n + 1:
+            return path  # 사전순 정렬 때문에 첫 번째 완성 경로가 정답
+
+        for i, (src, dst) in enumerate(tickets):
+            if not used[i] and src == cur:
+                new_used = used[:]     # 상태 복사
+                new_used[i] = True
+                q.append((dst, new_used, path + [dst]))
+
+    return answer
