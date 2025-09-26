@@ -1,6 +1,6 @@
-import itertools
+from itertools import permutations
 def check(number):
-    if number<=1:
+    if number<2:
         return False
     for i in range(2,number):
         if number%i==0:
@@ -9,13 +9,17 @@ def check(number):
 
 def solution(numbers):
     answer = 0
-    number = [n for n in numbers]
-    tmp = set()
-    for i in range(1,len(numbers)+1):
-        candidates = list(itertools.permutations(number,i))
-        for cand in candidates:
-            num = int("".join(cand))
-            if check(num):
-                tmp.add(num)
     
-    return len(tmp)
+    nums = [num for num in numbers]
+    all_numbers = set()
+    for i in range(1,len(nums)+1):
+        for tpl in permutations(nums,i):
+            new_number = ''
+            for num in tpl:
+                new_number += num
+            all_numbers.add(int(new_number))
+    
+    for number in all_numbers:
+        if check(number):
+            answer+=1
+    return answer
