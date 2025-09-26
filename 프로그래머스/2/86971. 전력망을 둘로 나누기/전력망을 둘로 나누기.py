@@ -1,31 +1,32 @@
 from collections import deque
-
-def bfs(idx,wires):
-    v1,v2 = wires[idx]
+def bfs(g,k,wires):
+    tmp = [g[0]]
     
     q = deque()
-    visited = [0]*len(wires)
-    
-    q.append(v1)
-    visited[idx] = 1
+    q.append(g[0])
+    v = set()
     
     while q:
-        parent = q.popleft()
+        cur = q.popleft()
         for i in range(len(wires)):
-            if parent in wires[i] and not visited[i]:
+            if i==k: continue
+            if cur in wires[i] and i not in v:
                 q.append(wires[i][0])
                 q.append(wires[i][1])
-                visited[i]=1
-    
-    return sum(visited)
+                v.add(i)
+                tmp.append(wires[i][0])
+                tmp.append(wires[i][1])
+    return len(set(tmp))
 
 def solution(n, wires):
     answer = n
     
-    for idx in range(n-1):
-        g1_cnt = bfs(idx,wires)
-        g2_cnt = n-g1_cnt
-        tmp = abs(g1_cnt-g2_cnt)
-        if tmp<answer:
-            answer = tmp
+    for k in range(n-1): #k번째 송전망을 끊을 때.
+        G1 = [wires[k][0]]
+        G2 = [wires[k][1]]
+        
+        l1 = bfs(G1,k,wires)
+        l2 = n-l1
+        answer = min(abs(l1-l2),answer)
+        
     return answer
