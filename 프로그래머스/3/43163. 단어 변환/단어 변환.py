@@ -1,3 +1,4 @@
+
 from collections import deque
 def count_diff(previous, later):
     count=0
