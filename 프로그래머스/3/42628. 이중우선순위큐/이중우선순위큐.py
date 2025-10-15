@@ -1,24 +1,28 @@
 import heapq
 
 def solution(operations):
-    answer = []
-    heap = []
-    heapq.heapify(heap)
-
-    for operation in operations:
-        op, num = operation.split()
-        if op == 'I':
-            heapq.heappush(heap, int(num))
-        elif op == 'D' and num == '1': #최댓값 삭제
-            if len(heap) != 0:
-                m = max(heap)
-                heap.remove(m)
-        elif op == 'D' and num == '-1': #최솟값 삭제
-            if len(heap) != 0:
-                heapq.heappop(heap)
+    answer,mxheap,mnheap = [],[],[]
     
-    if len(heap) == 0:
-        answer = [0, 0]
-        return answer
-    answer = [max(heap), heapq.heappop(heap)]
+    heapq.heapify(mxheap)
+    heapq.heapify(mnheap)
+    
+    for op in operations:
+        if op=="D 1":
+            if not mxheap: continue
+            x = heapq.heappop(mxheap)
+            mnheap.remove(-x)
+        elif op=="D -1":
+            if not mnheap: continue
+            x = heapq.heappop(mnheap)
+            mxheap.remove(-x)
+        else:
+            _,num = op.split()
+            num = int(num)
+            heapq.heappush(mxheap,-num)
+            heapq.heappush(mnheap,num)
+    
+    if mxheap:
+        answer = [-heapq.heappop(mxheap), heapq.heappop(mnheap)]
+    else:
+        answer = [0,0]
     return answer
