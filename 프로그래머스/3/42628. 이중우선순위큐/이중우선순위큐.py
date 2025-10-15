@@ -11,10 +11,12 @@ def solution(operations):
             if not mxheap: continue
             x = heapq.heappop(mxheap)
             mnheap.remove(-x)
+            heapq.heapify(mnheap)
         elif op=="D -1":
             if not mnheap: continue
             x = heapq.heappop(mnheap)
             mxheap.remove(-x)
+            heapq.heapify(mxheap)
         else:
             _,num = op.split()
             num = int(num)
