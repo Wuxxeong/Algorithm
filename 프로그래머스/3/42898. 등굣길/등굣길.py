@@ -9,5 +9,5 @@ def solution(m, n, puddles):
             if [j,i] in puddles:
                 dp[i][j]=0
                 continue
-            dp[i][j] = dp[i-1][j] + dp[i][j-1]
-    return dp[-1][-1]%1000000007
+            dp[i][j] = (dp[i-1][j] + dp[i][j-1])%1000000007
+    return dp[-1][-1]
