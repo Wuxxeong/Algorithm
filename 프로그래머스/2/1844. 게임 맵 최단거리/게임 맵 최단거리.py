@@ -1,24 +1,19 @@
 from collections import deque
 
 def solution(maps):
-    answer = 1
-    N,M = len(maps),len(maps[0])
-    si,sj,ei,ej = 0,0,N-1,M-1
-    
-    vset = set()
-    vset.add((si,sj))
-
+    n,m = len(maps),len(maps[0])
+    v = [[0]*m for _ in range(n)]
+    v[0][0] = 1
     q = deque()
-    q.append((si,sj,answer))
-    
+    q.append([0,0])    
     while q:
-        ci,cj,dist = q.popleft()
-        if (ci,cj)==(ei,ej):
-            return dist
+        ci,cj = q.popleft()
+        if (ci,cj)==(n-1,m-1):
+            return v[n-1][m-1]
         for di,dj in ((0,1),(0,-1),(1,0),(-1,0)):
             ni,nj = ci+di, cj+dj
-            if 0<=ni<N and 0<=nj<M and maps[ni][nj]==1 and (ni,nj) not in vset:
-                vset.add((ni,nj))
-                q.append((ni,nj,dist+1))
-                
+            if 0<=ni<n and 0<=nj<m and maps[ni][nj]==1 and v[ni][nj]==0:
+                v[ni][nj] = v[ci][cj]+1
+                q.append([ni,nj])
+    
     return -1
