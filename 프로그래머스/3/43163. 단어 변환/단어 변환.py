@@ -1,24 +1,23 @@
-
 from collections import deque
-def count_diff(previous, later):
-    count=0
-    for i in range(len(previous)):
-        if previous[i] != later[i]:
-            count += 1
-    return count
 
 def solution(begin, target, words):
-    answer = 0
-    queue = deque()
-    queue.append((begin, answer))
+    q = deque()
+    q.append((begin, 0))
+    visited = set()
+    visited.add(begin)
     
-    while queue:
-        previous, answer = queue.popleft()
-        if previous == target:
+    while q:
+        cur, answer = q.popleft()
+        if cur == target:
             return answer
-        for i in range(len(words)):
-            if count_diff(previous, words[i]) == 1:
-                queue.append((words[i], answer+1))
-
-    answer = 0
-    return answer
+        
+        for word in words:
+            if word not in visited:
+                cnt = 0
+                for i in range(len(word)):
+                    if word[i] != cur[i]:
+                        cnt += 1
+                if cnt == 1:
+                    visited.add(word)
+                    q.append((word, answer + 1))
+    return 0
