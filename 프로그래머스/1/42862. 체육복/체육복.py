@@ -1,18 +1,19 @@
 def solution(n, lost, reserve):
-    answer = n
-    lost_but_reserve = set(lost)&set(reserve)
+    # 정렬
+    lost.sort()
+    reserve.sort()
+	
+    # lost, reserve에 공통으로 있는 요소 제거
+    for i in reserve[:]:
+        if i in lost:
+            reserve.remove(i)
+            lost.remove(i)
+	
+    # 체육복 빌려주기(나의 앞 번호부터 확인)
+    for i in reserve:
+        if i-1 in lost:
+            lost.remove(i-1)
+        elif i+1 in lost:
+            lost.remove(i+1)
     
-    # for k in lost_but_reserve:
-    #     lost.remove(k)
-    #     reserve.remove(k)
-    lost = sorted(list(filter(lambda x : x not in lost_but_reserve, lost)))
-    reserve = sorted(list(filter(lambda x : x not in lost_but_reserve, reserve)))
-    
-    for l in lost:
-        if l-1 in reserve:
-            reserve.remove(l-1)
-        elif l+1 in reserve:
-            reserve.remove(l+1)
-        else:
-            answer -= 1
-    return answer
+    return n-len(lost)
